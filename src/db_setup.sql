@@ -38,15 +38,15 @@ primary key(sender_id)
  ALTER TABLE users
  DROP status;
  
- SELECT * FROM users;
+ SELECT * FROM messages;
  
- SELECT count(*) FROM users;
+ SELECT count(*) FROM messages;
  /*
  DELETE FROM messages WHERE message_id > 0;
  
  DELETE FROM users WHERE user_id > 95276708;
  */
- DELETE FROM users WHERE user_id > 324388757;
+ DELETE FROM users WHERE user_id > 0;
  
  # For each database:
 ALTER DATABASE rmm_telegram CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
