@@ -53,7 +53,20 @@ MODELS_UPD_COL = "models"
 
 ISSUE_UPD_COL = "issues"
 
+ISSUE_GRP_UPD_COL = "issues_group"
+
 TOOLS_UPD_COL = "tools"
+
+#entity key table
+
+ENTMAP_TABLENAME = "entity_key"
+
+ENTMAP_PROCID_COL = "proc_msg_id"
+
+# entity table
+ENT_TABLENAME = "entity"
+
+
 
 ############ External Data Configs #############
 
@@ -64,5 +77,7 @@ DEV_MODEL_COL = "models"
 
 #   issues_solutions.csv
 ISSUE_COL = "issues"
+
+ISSUE_GRP_COL = "issues_group"
 
 TOOLS_COL = "tools"

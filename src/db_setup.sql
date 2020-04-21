@@ -21,6 +21,28 @@ is_bot BOOL,
 primary key(sender_id)
 );
 
+CREATE TABLE entity(
+proc_msg_id INT,
+message TEXT,
+brand TEXT,
+brand_count INT,
+models TEXT,
+models_count INT,
+tools TEXT,
+tools_count INT,
+issues TEXT,
+issues_group TEXT,
+issues_count INT,
+primary key(proc_msg_id)
+);
+
+CREATE TABLE entity_key(
+proc_msg_id INT,
+message_id INT
+);
+
+SHOW TABLES;
+
  /*ALTER TABLE messages ADD FOREIGN KEY (sender_id) REFERENCES users(user_id); */
  
  ALTER TABLE messages ADD PRIMARY KEY (message_id);
