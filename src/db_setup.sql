@@ -47,6 +47,8 @@ SHOW TABLES;
  
  ALTER TABLE messages ADD PRIMARY KEY (message_id);
  
+ ALTER TABLE entity_key ADD PRIMARY KEY (message_id);
+ 
  ALTER TABLE users
  MODIFY COLUMN phone varchar(15);
  
@@ -60,15 +62,19 @@ SHOW TABLES;
  ALTER TABLE users
  DROP status;
  
- SELECT * FROM messages;
+ SELECT * FROM entity WHERE proc_msg_id >= 0;
  
- SELECT count(*) FROM messages;
+ SELECT * FROM entity_key;# WHERE message_id >= 44324;
+ 
+ SELECT * FROM messages;
  /*
  DELETE FROM messages WHERE message_id > 0;
  
  DELETE FROM users WHERE user_id > 95276708;
  */
- DELETE FROM users WHERE user_id > 0;
+ #DELETE FROM entity_key WHERE proc_msg_id >0;
+ 
+# SET SQL_SAFE_UPDATES = 0;
  
  # For each database:
 ALTER DATABASE rmm_telegram CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
@@ -76,8 +82,13 @@ ALTER DATABASE rmm_telegram CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci
 ALTER TABLE messages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 ALTER TABLE users CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE entity CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 # For each column:
 ALTER TABLE messages CHANGE message message TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE entity CHANGE message message TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 ALTER TABLE users CHANGE firstname firstname VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

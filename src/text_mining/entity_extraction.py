@@ -118,6 +118,8 @@ class EntityExtractor():
         """
         df = self.raw_messages_df.copy()
         
+        proc_m_id = self.proc_msg_id
+        
         print("messages shape before preproc", df.shape)
         
         message_colname = catalog.MSG_TEXT_COL
@@ -155,19 +157,23 @@ class EntityExtractor():
             
         print("messages shape after basic preproc", df.shape, "Combining chats now..")
         
-        proc_m_id = df[catalog.MSG_ID_COL].min()
-        
         map_proc_m_id = []
         
         map_m_id = []
         
         num_rows = df.shape[0]
         
+        df = df.reset_index(drop=True)
+        
         for num, row in df.iterrows():        
             
             if num == 0:
                 
                 prev_row = row
+                
+                map_proc_m_id += [proc_m_id]
+            
+                map_m_id += [row[catalog.MSG_ID_COL]]
                 
                 continue
             
@@ -179,20 +185,8 @@ class EntityExtractor():
                 
                 row[message_colname] = prev_row[message_colname] + " " + row[message_colname]
                 
-                if num_rows==num:
-                    #if last row, then do the appending
                     
-                    proc_m_id += 1
-                
-                    curr_df = pd.DataFrame({catalog.ENTMAP_PROCID_COL:[proc_m_id],
-                                  catalog.MSG_TEXT_COL:[prev_row[message_colname]]
-                                  })
-                    
-                    proc_df = pd.concat([proc_df, curr_df], axis=0, ignore_index=True)
-                
             else:
-                
-                proc_m_id += 1
                 
                 curr_df = pd.DataFrame({catalog.ENTMAP_PROCID_COL:[proc_m_id],
                               catalog.MSG_TEXT_COL:[prev_row[message_colname]]
@@ -200,12 +194,21 @@ class EntityExtractor():
                 
                 proc_df = pd.concat([proc_df, curr_df], axis=0, ignore_index=True)
                 
+                proc_m_id += 1
+                
             
             prev_row = row
             
             map_proc_m_id += [proc_m_id]
             
             map_m_id += [row[catalog.MSG_ID_COL]]
+            
+        #compulsorily write the last row            
+        curr_df = pd.DataFrame({catalog.ENTMAP_PROCID_COL:[proc_m_id],
+                                  catalog.MSG_TEXT_COL:[row[message_colname]]
+                                  })
+                    
+        proc_df = pd.concat([proc_df, curr_df], axis=0, ignore_index=True)
             
         mapping_df = pd.DataFrame({catalog.ENTMAP_PROCID_COL:map_proc_m_id,
                       catalog.MSG_ID_COL:map_m_id
@@ -286,8 +289,10 @@ class EntityExtractor():
             
             raw_msg_id = next(self.db_engine.execute(sql))[0]
             
-        sql = "SELECT min({}) FROM {} WHERE {} = {};".format(catalog.ENTMAP_PROCID_COL, catalog.ENTMAP_TABLENAME,
+        sql = "SELECT min({}) FROM {} WHERE {} >= {};".format(catalog.ENTMAP_PROCID_COL, catalog.ENTMAP_TABLENAME,
                                                              catalog.MSG_ID_COL, raw_msg_id)
+        
+        #print(sql)
         
         proc_msg_id = next(self.db_engine.execute(sql))[0]
         
@@ -315,15 +320,17 @@ class EntityExtractor():
                 print("**\nlooks like no text has been processed yet.\
                       \nHence will be returning first message id.\
                       \nThis might result in computing extraction for entire text data available in the db.\n**")
-                      
-                return final_msg_id
+                
+                proc_msg_id = 1
+                
+                return final_msg_id, proc_msg_id
         
         sql = "SELECT min({}) FROM {} WHERE {} = {};".format(catalog.MSG_ID_COL, catalog.ENTMAP_TABLENAME,
                                                              catalog.ENTMAP_PROCID_COL, proc_msg_id)
         
         final_msg_id = next(self.db_engine.execute(sql))[0]        
         
-        return final_msg_id
+        return final_msg_id, proc_msg_id
         
         
     
@@ -345,10 +352,10 @@ class EntityExtractor():
     
         #sql = "SELECT * FROM {};".format(catalog.MSG_TABLENAME)
         
-        msg_id = self._get_first_msg_id(time_str)
+        self.msg_id, self.proc_msg_id = self._get_first_msg_id(time_str)
         
-        sql = "SELECT * FROM {} WHERE {} > {}".format( catalog.MSG_TABLENAME,
-                                                      catalog.MSG_ID_COL, msg_id)
+        sql = "SELECT * FROM {} WHERE {} >= {}".format( catalog.MSG_TABLENAME,
+                                                      catalog.MSG_ID_COL, self.msg_id)
         
         df = pd.read_sql_query(sql, self.db_engine)
         
@@ -599,13 +606,24 @@ class EntityExtractor():
         
         df_delete = df.loc[df[catalog.ENTMAP_PROCID_COL].isin(proc_msg_ids), :]
         
-        for num, row in df_delete.iterrows():
+        delete_ids = tuple(df_delete[catalog.ENTMAP_PROCID_COL].unique().tolist())
+        
+        if len(delete_ids) > 1:
             
-            sql = "DELETE FROM {} WHERE {} = {};".format(catalog.ENTMAP_TABLENAME, catalog.ENTMAP_PROCID_COL, row[catalog.ENTMAP_PROCID_COL])
-            
-            print(sql)
-            
+            sql = "DELETE FROM {} WHERE {} IN {};".format(catalog.ENTMAP_TABLENAME, catalog.ENTMAP_PROCID_COL, delete_ids)
+        
+            #print(sql)
+                        
             self.db_engine.execute(sql)
+            
+        elif len(delete_ids) == 1:
+            
+            sql = "DELETE FROM {} WHERE {} IN ({});".format(catalog.ENTMAP_TABLENAME, catalog.ENTMAP_PROCID_COL, delete_ids[0])
+        
+            #print(sql)
+                        
+            self.db_engine.execute(sql)
+            
             
         print("Deleted existing {} records from {}".format(df_delete.shape[0], catalog.ENTMAP_TABLENAME))
             
@@ -614,7 +632,7 @@ class EntityExtractor():
         df.to_sql(catalog.ENTMAP_TABLENAME, con=self.db_engine, 
                             if_exists="append", index=False)
         
-        print("appending to {} table complete".format(catalog.ENT_TABLENAME), "{} new rows added".format(df.shape))
+        print("appending to {} table complete".format(catalog.ENTMAP_TABLENAME), "{} new rows added".format(df.shape))
         
         return
     
@@ -669,7 +687,7 @@ class EntityExtractor():
 """
 ent_ext_obj = EntityExtractor(model_fnames = [catalog.DEV_MODEL_UPD_FILE])
 
-extracted_df = ent_ext_obj.run_extraction(time_str="2020-03-01")
+extracted_df = ent_ext_obj.run_extraction(time_str="2020-04-01")
 
 
 ########################### CHECKING STATS #####################################
