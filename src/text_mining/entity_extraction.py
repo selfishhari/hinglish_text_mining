@@ -687,7 +687,7 @@ class EntityExtractor():
 """
 ent_ext_obj = EntityExtractor(model_fnames = [catalog.DEV_MODEL_UPD_FILE])
 
-extracted_df = ent_ext_obj.run_extraction(time_str="2020-04-01")
+extracted_df = ent_ext_obj.run_extraction(time_str="2020-04-15")
 
 
 ########################### CHECKING STATS #####################################
