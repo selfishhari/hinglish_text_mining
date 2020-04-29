@@ -277,12 +277,6 @@ class TelegramDataExtracter():
     
         
     
-obj = TelegramDataExtracter()
-
-await obj.initialize_client()
-
-messages_df, users_df = await obj.run_extraction_all()
-
 #users_df.to_csv(catalog.USERS_FILE, index=False)
 
 #messages_df.to_csv(catalog.MESSAGES_FILE, index=False)
