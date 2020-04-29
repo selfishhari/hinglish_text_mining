@@ -5,3 +5,4 @@ mysqlclient==1.4.6
 xlrd==1.2.0
 pymysql
 nltk
+Flask

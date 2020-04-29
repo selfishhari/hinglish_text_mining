@@ -8,6 +8,7 @@ Created on Sat Apr 25 14:23:03 2020
 
 import sys, os
 sys.path.insert(0, "/home/fractaluser/Narahari/Personal/Consulting/hinglish_text_mining")
+sys.path.insert(0, "/home/ec2-user/hinglish_text_mining")
 
 from flask import Flask, request
 from flask_cors import CORS
