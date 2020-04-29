@@ -48,22 +48,21 @@ message_id INT
 
 SHOW TABLES;
 
- /*ALTER TABLE messages ADD FOREIGN KEY (sender_id) REFERENCES users(user_id); */
+/* ALTER TABLE messages ADD FOREIGN KEY (sender_id) REFERENCES users(user_id); */
  
- ALTER TABLE messages ADD PRIMARY KEY (message_id);
+/* ALTER TABLE messages ADD PRIMARY KEY (message_id);*/
  
  ALTER TABLE entity_key ADD PRIMARY KEY (message_id);
  
  /*
- DELETE FROM messages WHERE message_id > 0;
+DELETE FROM messages WHERE message_id > 0;
  
- DELETE FROM users WHERE user_id > 95276708;
- */
- #DELETE FROM entity_key WHERE proc_msg_id >0;
+DELETE FROM users WHERE user_id > 95276708;
+
+DELETE FROM entity_key WHERE proc_msg_id >0;
+*/
  
-# SET SQL_SAFE_UPDATES = 0;
- 
- # For each database:
+# For each database:
 ALTER DATABASE rmm_telegram CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 # For each table:
