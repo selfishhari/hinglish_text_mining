@@ -1,3 +1,9 @@
+CREATE DATABASE rmm_telegram;
+
+CREATE USER 'rmm_ai'@'localhost' IDENTIFIED BY 'rmm_ai';
+
+GRANT ALL ON rmm_telegram.* TO 'rmm_ai'@'localhost';
+
 USE rmm_telegram;
 
 CREATE TABLE messages(
@@ -11,7 +17,7 @@ primary key(message_id)
 
 CREATE TABLE users(
 user_id INT,
-phone INT,
+phone varchar(15),
 scam BOOL,
 verified BOOL,
 firstname VARCHAR(50),
@@ -49,24 +55,6 @@ SHOW TABLES;
  
  ALTER TABLE entity_key ADD PRIMARY KEY (message_id);
  
- ALTER TABLE users
- MODIFY COLUMN phone varchar(15);
- 
- /*ALTER TABLE messages
- MODIFY COLUMN time TIMESTAMP;
- 
- DROP TABLE messages;
- 
- */
- 
- ALTER TABLE users
- DROP status;
- 
- SELECT * FROM entity WHERE proc_msg_id >= 0;
- 
- SELECT * FROM entity_key;# WHERE message_id >= 44324;
- 
- SELECT * FROM messages;
  /*
  DELETE FROM messages WHERE message_id > 0;
  
@@ -78,6 +66,7 @@ SHOW TABLES;
  
  # For each database:
 ALTER DATABASE rmm_telegram CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
 # For each table:
 ALTER TABLE messages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
