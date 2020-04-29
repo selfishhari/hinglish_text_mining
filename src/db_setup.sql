@@ -23,8 +23,7 @@ verified BOOL,
 firstname VARCHAR(50),
 lastname VARCHAR(50),
 username VARCHAR(100),
-is_bot BOOL,
-primary key(sender_id)
+is_bot BOOL
 );
 
 CREATE TABLE entity(
