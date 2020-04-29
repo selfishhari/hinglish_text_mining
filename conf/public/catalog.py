@@ -15,10 +15,7 @@ USERS_FILE = "data/01_raw/users_dump.csv"
 
 MOBILE_MODEL_FILE = "data/01_raw/mobile_brands_list.xlsx"
 
-SCRAPED_MOB_MODEL_FILES = ["data/02_processed/model_names.csv", 
-                           "data/02_processed/model_names_v2.csv",
-                           "data/02_processed/model_names_v3.csv",
-                           #"data/02_processed/model_names_v5.csv",
+SCRAPED_MOB_MODEL_FILES = ["data/02_processed/device_models_updated.csv",
                            ]
 
 DEV_MODEL_UPD_FILE = os.path.join("data", "02_processed", "device_models_updated.csv")

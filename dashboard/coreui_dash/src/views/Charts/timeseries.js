@@ -53,6 +53,12 @@ class TimeSeries extends Component {
 			l3_label:"Issues",
 			chart_data_options:this.chart_data_options
 		}
+		
+		this.API_HOST = process.env.REACT_APP_FETCH_API_HOST
+		
+		this.API_PORT = process.env.REACT_APP_FETCH_API_PORT
+
+		this.api_address = "http://" + this.API_HOST + ":" + this.API_PORT + "/"
 	//------------------------------- End of Constructor---------------------//
 	}
 	
@@ -128,7 +134,7 @@ class TimeSeries extends Component {
 				body: JSON.stringify(chart_selections)
 			};
 			
-		fetch("http://192.168.0.103:5000/timeseries", requestOptions)
+		fetch(this.api_address + "timeseries", requestOptions)
       .then(res => res.json())
       .then(
         (result) => {
