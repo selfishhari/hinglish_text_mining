@@ -135,6 +135,13 @@ title: {
             text: this.chart_title
         }
 }
+
+this.API_HOST = process.env.REACT_APP_FETCH_API_HOST
+this.API_PORT = process.env.REACT_APP_FETCH_API_PORT
+
+this.api_address = "http://" + this.API_HOST + ":" + this.API_PORT + "/"
+
+console.log("SERVER API ADDRESS", this.api_address )
     
    //end of constructor     
 }
@@ -281,7 +288,7 @@ handleDDChange = (level, event, values) => {
 	
 
     
-	fetch("http://192.168.0.103:5000/aggregates", requestOptions)
+	fetch(this.api_address + "aggregates", requestOptions)
       .then(res => res.json())
       .then(
         (result) => {
@@ -341,7 +348,7 @@ handleDDChange = (level, event, values) => {
 			
 			
   
-  		fetch("http://192.168.0.103:5000/aggregates", requestOptions)
+  		fetch(this.api_address + "aggregates", requestOptions)
       .then(res => res.json())
       .then(
         (result) => {
@@ -376,7 +383,7 @@ handleDDChange = (level, event, values) => {
         }
     );
     
-    fetch("http://192.168.0.103:5000/labels")
+    fetch(this.api_address + "labels")
       .then(res => res.json())
       .then(
         (result) => {
