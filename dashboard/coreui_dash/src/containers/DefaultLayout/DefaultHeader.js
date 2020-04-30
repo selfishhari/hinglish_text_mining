@@ -32,7 +32,7 @@ class DefaultHeader extends Component {
         
 
         
-        <Nav className="d-md-down-none" navbar>
+        {/*<Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
             <NavLink to="/dashboard" className="nav-link" >Telegram</NavLink>
           </NavItem>
@@ -42,7 +42,7 @@ class DefaultHeader extends Component {
           <NavItem className="px-3">
             <NavLink to="/charts" className="nav-link">Website</NavLink>
           </NavItem>
-        </Nav>
+        </Nav>*/}
         
         <Nav className="ml-auto" navbar>
           <UncontrolledDropdown nav direction="down">
